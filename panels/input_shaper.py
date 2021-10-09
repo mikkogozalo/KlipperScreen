@@ -175,11 +175,11 @@ class InputShaperPanel(ScreenPanel):
         self.set_opt_value(None, None)
 
 
-def get_updates(self):
-        config = self._screen.apiclient.send_request("printer/objects/query?configfile")
-        input_shaper_config = config['result']['status']['configfile']['settings']['input_shaper']
-        for _ in XY_FREQ:
-            self.freq_xy_adj[_['config']].set_value(input_shaper_config[_['config']])
-            shaper_slug = _['config'].replace('_freq_', '_type_')
-            self.freq_xy_combo[shaper_slug].set_active(SHAPERS.index(input_shaper_config[shaper_slug]))
-            self.freq_xy_combo[shaper_slug].connect("changed", self.set_opt_value, shaper_slug)
+    def get_updates(self):
+            config = self._screen.apiclient.send_request("printer/objects/query?configfile")
+            input_shaper_config = config['result']['status']['configfile']['settings']['input_shaper']
+            for _ in XY_FREQ:
+                self.freq_xy_adj[_['config']].set_value(input_shaper_config[_['config']])
+                shaper_slug = _['config'].replace('_freq_', '_type_')
+                self.freq_xy_combo[shaper_slug].set_active(SHAPERS.index(input_shaper_config[shaper_slug]))
+                self.freq_xy_combo[shaper_slug].connect("changed", self.set_opt_value, shaper_slug)
