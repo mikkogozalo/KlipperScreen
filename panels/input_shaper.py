@@ -161,12 +161,12 @@ class InputShaperPanel(ScreenPanel):
 
     def calculate(self):
         self.calibrate_btn.set_label(self.lang.gettext('Computing values...'))
-        s = subprocess.run([SCRIPT_PATH, self.x_file], stdout=subprocess.PIPE)
+        s = subprocess.run([SCRIPT_PATH, self.x_file, "-o", "/tmp/x.png"], stdout=subprocess.PIPE)
         details = re.search(r'shaper is (?P<shaper>.*) @ (?P<freq>[0-9.]+) Hz', s.stdout).groupdict()
         self.freq_xy_adj['shaper_freq_x'].set_value(float(details['freq']))
         self.freq_xy_combo['shaper_type_x'].set_active(SHAPERS.index(details['shaper']))
 
-        s = subprocess.run([SCRIPT_PATH, self.y_file], stdout=subprocess.PIPE)
+        s = subprocess.run([SCRIPT_PATH, self.y_file, "-o", "/tmp/y.png"], stdout=subprocess.PIPE)
         details = re.search(r'shaper is (?P<shaper>.*) @ (?P<freq>[0-9.]+) Hz', s.stdout).groupdict()
         self.freq_xy_adj['shaper_freq_y'].set_value(float(details['freq']))
         self.freq_xy_combo['shaper_type_y'].set_active(SHAPERS.index(details['shaper']))
