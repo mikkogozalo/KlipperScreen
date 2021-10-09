@@ -21,32 +21,36 @@ class MainPanel(MenuPanel):
         grid.set_vexpand(True)
 
         # Create Extruders and bed icons
-        eq_grid = Gtk.Grid()
-        eq_grid.set_hexpand(True)
-        eq_grid.set_vexpand(True)
 
-        self.heaters = []
+        if self._screen._config.get_main_config().getboolean('main_menu_temps', fallback=True):
+            eq_grid = Gtk.Grid()
+            eq_grid.set_hexpand(True)
+            eq_grid.set_vexpand(True)
 
-        i = 0
-        for x in self._printer.get_tools():
-            self.labels[x] = self._gtk.ButtonImage("extruder-"+str(i), self._gtk.formatTemperatureString(0, 0))
-            self.heaters.append(x)
-            i += 1
+            self.heaters = []
 
-        add_heaters = self._printer.get_heaters()
-        for h in add_heaters:
-            if h == "heater_bed":
-                self.labels[h] = self._gtk.ButtonImage("bed", self._gtk.formatTemperatureString(0, 0))
-            else:
-                name = " ".join(h.split(" ")[1:])
-                self.labels[h] = self._gtk.ButtonImage("heat-up", name)
-            self.heaters.append(h)
+            i = 0
+            for x in self._printer.get_tools():
+                self.labels[x] = self._gtk.ButtonImage("extruder-"+str(i), self._gtk.formatTemperatureString(0, 0))
+                self.heaters.append(x)
+                i += 1
 
-        i = 0
-        cols = 3 if len(self.heaters) > 4 else (1 if len(self.heaters) <= 2 else 2)
-        for h in self.heaters:
-            eq_grid.attach(self.labels[h], i % cols, int(i/cols), 1, 1)
-            i += 1
+            add_heaters = self._printer.get_heaters()
+            for h in add_heaters:
+                if h == "heater_bed":
+                    self.labels[h] = self._gtk.ButtonImage("bed", self._gtk.formatTemperatureString(0, 0))
+                else:
+                    name = " ".join(h.split(" ")[1:])
+                    self.labels[h] = self._gtk.ButtonImage("heat-up", name)
+                self.heaters.append(h)
+
+            i = 0
+            cols = 3 if len(self.heaters) > 4 else (1 if len(self.heaters) <= 2 else 2)
+            for h in self.heaters:
+                eq_grid.attach(self.labels[h], i % cols, int(i/cols), 1, 1)
+                i += 1
+            grid.attach(eq_grid, 0, 0, 1, 1)
+
 
         self.items = items
         self.create_menu_items()
@@ -55,8 +59,9 @@ class MainPanel(MenuPanel):
         self.grid.set_row_homogeneous(True)
         self.grid.set_column_homogeneous(True)
 
-        grid.attach(eq_grid, 0, 0, 1, 1)
-        grid.attach(self.arrangeMenuItems(items, 2, True), 1, 0, 1, 1)
+        columns = int(self._screen._config.get_main_config().getint('main_menu_columns', fallback=2))
+
+        grid.attach(self.arrangeMenuItems(items, columns, True), 1, 0, 1, 1)
 
         self.grid = grid
 

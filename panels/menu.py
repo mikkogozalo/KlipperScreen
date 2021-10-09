@@ -47,8 +47,8 @@ class MenuPanel(ScreenPanel):
             row = int(i/columns)
             width = 1
 
-            if expandLast is True and i+1 == length and length % 2 == 1:
-                width = 2
+            if expandLast is True and i+1 == length and length % columns != 0:
+                width = columns - (length % columns) + 1
 
             self.grid.attach(self.labels[key], col, row, width, 1)
             i += 1

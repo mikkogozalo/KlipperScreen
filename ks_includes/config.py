@@ -141,6 +141,10 @@ class KlipperScreenConfig:
                     {"name": _("Small"), "value": "small"},
                     {"name": _("Medium") + " " + _("(default)"), "value": "medium"},
                     {"name": _("Large"), "value": "large"}]}},
+            {"main_menu_columns": {
+                "section": "main", "name": _("Main Menu Columns"), "type": "scale", "range": [1, 5], "step": 1,
+                "value": "2", "callback": screen.restart_warning,
+            }},
             # {"": {"section": "main", "name": _(""), "type": ""}}
         ]
 
