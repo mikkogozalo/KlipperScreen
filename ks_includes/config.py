@@ -141,6 +141,9 @@ class KlipperScreenConfig:
                     {"name": _("Small"), "value": "small"},
                     {"name": _("Medium") + " " + _("(default)"), "value": "medium"},
                     {"name": _("Large"), "value": "large"}]}},
+            {"main_menu_temps": {
+                "section": "main", "name": _("Main Menu Temperature"), "type": "binary", "value": "True"
+            }},
             # {"": {"section": "main", "name": _(""), "type": ""}}
         ]
 
