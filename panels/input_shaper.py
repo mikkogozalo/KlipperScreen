@@ -115,7 +115,7 @@ class InputShaperPanel(ScreenPanel):
         self._screen._ws.send_method("server.gcode_store", {"count": 100}, self.gcode_response)
 
     def start_calibration(self, *_):
-        # self._screen._ws.klippy.gcode_script('TEST_RESONANCES AXIS=X')
+        self._screen._ws.klippy.gcode_script('TEST_RESONANCES AXIS=X')
         self._screen._ws.klippy.gcode_script('TEST_RESONANCES AXIS=Y')
         self.calibrate_btn.set_label(self.lang.gettext('Calibrating...'))
         self.calibrate_btn.set_sensitive(False)
