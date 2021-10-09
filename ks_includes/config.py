@@ -144,6 +144,10 @@ class KlipperScreenConfig:
             {"main_menu_temps": {
                 "section": "main", "name": _("Main Menu Temperature"), "type": "binary", "value": "True"
             }},
+            {"main_menu_columns": {
+                "section": "main", "name": _("Main Menu Columns"), "type": "scale", "range": [1, 5], "step": 1,
+                "value": "2", "callback": screen.restart_warning,
+            }},
             # {"": {"section": "main", "name": _(""), "type": ""}}
         ]
 
