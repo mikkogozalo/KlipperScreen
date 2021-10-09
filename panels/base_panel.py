@@ -105,6 +105,8 @@ class BasePanel(ScreenPanel):
 
         self.control['temp_box'] = Gtk.Box()
         self.control['temp_box'].set_vexpand(True)
+        self.control['temp_box'].set_hexpand(True)
+
         self.control['temp_box'].set_size_request(0, self.title_spacing)
 
         self.layout.put(self.control['temp_box'], action_bar_width, 0)
@@ -123,6 +125,8 @@ class BasePanel(ScreenPanel):
         if show is False:
             return
 
+        heater_boxes = []
+
         i = 0
         for extruder in self._printer.get_tools():
             self.labels[extruder + '_box'] = Gtk.Box(spacing=0)
@@ -134,7 +138,7 @@ class BasePanel(ScreenPanel):
             self.labels[extruder + '_box'].pack_start(self.labels[extruder], True, 3, 3)
             i += 1
         self.current_extruder = self._printer.get_stat("toolhead", "extruder")
-        self.control['temp_box'].pack_start(self.labels["%s_box" % self.current_extruder], True, 5, 5)
+        heater_boxes.append(self.labels["%s_box" % self.current_extruder])
 
         if self._printer.has_heated_bed():
             heater_bed = self._gtk.Image("bed.svg", None, .4, .4)
@@ -143,8 +147,21 @@ class BasePanel(ScreenPanel):
             heater_bed_box = Gtk.Box(spacing=0)
             heater_bed_box.pack_start(heater_bed, True, 5, 5)
             heater_bed_box.pack_start(self.labels['heater_bed'], True, 3, 3)
-            self.control['temp_box'].pack_end(heater_bed_box, True, 3, 3)
+            heater_boxes.append(heater_bed_box)
 
+        if self._printer.has_raspi_temp():
+            raspi = self._gtk.Image("console.svg", None, .4, .4)
+            self.labels['raspi'] = Gtk.Label(label="20 C")
+            raspi_box = Gtk.Box(spacing=0)
+            raspi_box.pack_start(raspi, True, 5, 5)
+            raspi_box.pack_start(self.labels['raspi'], True, 3, 3)
+            heater_boxes.append(raspi_box)
+
+        for i, _ in enumerate(heater_boxes, start=1):
+            if i != len(heater_boxes):
+                self.control['temp_box'].pack_start(_, True, True, 5)
+            else:
+                self.control['temp_box'].pack_end(_, True, True, 5)
 
     def activate(self):
         size = self.control['time_box'].get_allocation().width
@@ -192,6 +209,10 @@ class BasePanel(ScreenPanel):
                 self.current_extruder = data["toolhead"]["extruder"]
                 self.control['temp_box'].pack_start(self.labels["%s_box" % self.current_extruder], True, 3, 3)
                 self.control['temp_box'].show_all()
+
+        if self._printer.has_raspi_temp():
+            self.labels["raspi"].set_label(
+                "%02d°" % round(self._printer.get_dev_stat("temperature_sensor raspberry_pi", "temperature")))
 
 
     def remove(self, widget):

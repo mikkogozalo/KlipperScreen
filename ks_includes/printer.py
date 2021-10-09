@@ -85,7 +85,8 @@ class Printer:
             'print_stats',
             'toolhead',
             'virtual_sdcard',
-            'webhooks'
+            'webhooks',
+            'temperature_sensor raspberry_pi',
         ]
 
         for x in (self.get_tools() + self.get_heaters()):
@@ -275,6 +276,10 @@ class Printer:
 
     def has_heated_bed(self):
         if "heater_bed" in self.devices:
+            return True
+
+    def has_raspi_temp(self):
+        if "temperature_sensor raspberry_pi" in self.devices:
             return True
 
     def section_exists(self, section):
